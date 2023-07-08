@@ -32,7 +32,7 @@ function Login() {
             setError("");
           }, 3000);
         } else {
-          console.log("Correcto")
+          localStorage.setItem("token", res.data.token);
           navigate("/dashboard");
         }
       })
@@ -66,7 +66,7 @@ function Login() {
             <label className="text-main-gray-900 font-medium mb-1 text-sm mt-6">Contraseña</label>
             <input
               className="border-[1px] pl-4 outline-none border-main-gray-300 w-[320px] h-[48px] rounded-xl"
-              type="text"
+              type="password"
               placeholder="Escrite tu contraseña aquí..."
               name="password"
               required

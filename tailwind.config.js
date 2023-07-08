@@ -11,6 +11,9 @@ export default {
         'main-gray-400': '#8D9192',
         'main-gray-300': '#E0E0E0',
       },
+      fontFamily: {
+        sans: ['Inter', 'sans-serif']
+      }
     },
   },
   plugins: [],

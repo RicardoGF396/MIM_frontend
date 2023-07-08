@@ -1,3 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.filter-icon {
+  filter: invert(5%) sepia(11%) saturate(903%) hue-rotate(193deg)
+    brightness(35%) contrast(92%);
+}
+
+.selected {
+  background-color: lightblue;
+}
+
+.ant-btn:hover {
+  background-color: #c00261;
+  border: none;
+  color: white !important;
+  outline: none;
+}
