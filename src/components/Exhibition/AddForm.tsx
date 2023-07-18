@@ -10,7 +10,6 @@ import {
 } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import locale from "antd/es/date-picker/locale/es_ES";
-import { useEffect, useState } from "react";
 
 function AddForm({
   isOpen,
@@ -68,9 +67,10 @@ function AddForm({
       });
 
       formData.append("exhibition", JSON.stringify(bodyForm));
-
+      //console.log(formData)
       await handleAdd(formData);
-
+      form.resetFields();
+      form.setFieldsValue({ images: null }); // O form.setFieldsValue({ images: [] });
     }
   };
 
@@ -185,7 +185,10 @@ function AddForm({
                 name="date"
                 label="Duración de la exposición"
               >
-                <RangePicker locale={locale} size="large" />
+                <RangePicker
+                  locale={locale}
+                  size="large"
+                />
               </Form.Item>
               <Form.Item
                 className="flex-1"

@@ -13,9 +13,9 @@ import InputRadio from "../Form/InputRadio";
 import { handleOrder } from "../../app/slices/ExhibitionSlice";
 import { message } from "antd";
 import EditForm from "./EditForm";
+import { Exhibition as ExhibitionModel } from "../../models/Exhibition";
 
 function Exhibition() {
-  //Con el requestBody voy a ir cambiando
   const { rooms, requestBody } = useSelector(
     (state: RootState) => state.exhibition
   );
@@ -25,7 +25,7 @@ function Exhibition() {
 
   const [exhibitions, setExhibitions] = useState([]);
   //Si se actualiza el estado de exhibition quiere decir que se va a editar algun registro
-  const [exhibition, setExhibition] = useState<any>(null);
+  const [exhibition, setExhibition] = useState<ExhibitionModel>();
   const [isOpenCreate, setIsOpenCreate] = useState(false);
   const [isOpenEdit, setIsOpenEdit] = useState(false);
 
@@ -46,18 +46,18 @@ function Exhibition() {
       .catch((err) => console.log(err));
   };
 
-  const createExhibition = async (exhibition: any) => {
+  const createExhibition = async (item: any) => {
     await axios
-      .post(`${API_URL}/exhibitions/`, exhibition, {
+      .post(`${API_URL}/exhibitions/`, item, {
         headers: {
           "access-token": localStorage.getItem("token"),
-          "Content-Type": "multipart/for-data"
+          "Content-Type": "multipart/form-data",
         },
       })
       .then(async () => {
-        message.success("Exhibición añadida exitosamente")
-        await getExhibitons()
-        setIsOpenCreate(false)
+        message.success("Exhibición añadida exitosamente");
+        await getExhibitons();
+        setIsOpenCreate(false);
       })
       .catch((error) => console.log("Error: ", error));
   };
@@ -70,11 +70,11 @@ function Exhibition() {
         },
       })
       .then(async () => {
-        message.success("Exhibición eliminada exitosamente")
-        await getExhibitons()
+        message.success("Exhibición eliminada exitosamente");
+        await getExhibitons();
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   const getExhibition = async (id: number) => {
     await axios
@@ -84,16 +84,30 @@ function Exhibition() {
         },
       })
       .then(async (res) => {
-        setExhibition(res.data);
-        setIsOpenEdit(true)
+        const data = res.data[0];
+        setExhibition(data);
+        setIsOpenEdit(true);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
-  const editExhibition = async () => {
-    
-  }
-
+  const editExhibition = async (id: number, exhibitionform: any) => {
+    axios
+      .put(`${API_URL}/exhibitions/${id}`, exhibitionform, {
+        headers: {
+          "access-token": localStorage.getItem("token"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(async () =>{ 
+        message.success("Exhibición actualizada exitosamente")
+        await getExhibitons();
+      })
+      .catch((err) => {
+        console.log(err)
+        message.error("Hubo un problema")
+      });
+  };
 
   useEffect(() => {
     getExhibitons();
@@ -106,12 +120,15 @@ function Exhibition() {
         isOpen={isOpenCreate}
         setIsOpen={setIsOpenCreate}
       />
-      <EditForm
-      editFn={editExhibition}
-      exhibition={exhibition}
-      isOpen={isOpenEdit}
-      setIsOpen={setIsOpenEdit}
-      />
+      {exhibition && (
+        <EditForm
+          editFn={editExhibition}
+          exhibition={exhibition}
+          isOpen={isOpenEdit}
+          setIsOpen={setIsOpenEdit}
+          setExhibition={setExhibition}
+        />
+      )}
       <TopBar icon={Exposicion} title="Exposiciones" />
       {/* Filtros y Agregar*/}
       <div className="w-full border-b border-main-gray-300 px-8 h-[90px] py-3">
@@ -139,11 +156,12 @@ function Exhibition() {
         {exhibitions ? (
           <div>
             {exhibitions.map((exhibition, index) => (
-              <Item 
-              getFn={getExhibition}
-              deleteFn = {deleteExhibition}
-              key={index} 
-              exhibition={exhibition} />
+              <Item
+                getExhibitionFn={getExhibition}
+                deleteFn={deleteExhibition}
+                key={index}
+                exhibition={exhibition}
+              />
             ))}
           </div>
         ) : (

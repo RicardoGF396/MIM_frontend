@@ -6,6 +6,7 @@ export interface Exhibition {
     start_date:string,
     end_date:string,
     virtual_route?:string,
-    images?:string,
+    images?:any,
     room:string,
+    fulldate?:Array<string>
 }

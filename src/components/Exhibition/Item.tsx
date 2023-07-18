@@ -11,12 +11,12 @@ import { es } from "date-fns/locale";
 import { Modal } from "antd";
 
 interface ItemProps {
-  exhibition: Exhibition; 
+  exhibition: Exhibition;
   deleteFn: (id: number) => Promise<void>;
-  getFn: (id: number) => Promise<void>;
+  getExhibitionFn: (id: number) => Promise<void>;
 }
 
-function Item({ exhibition, deleteFn, getFn }: ItemProps) {
+function Item({ exhibition, deleteFn, getExhibitionFn }: ItemProps) {
   const { id, name, description, start_date, end_date, participants, room } =
     exhibition;
 
@@ -47,13 +47,13 @@ function Item({ exhibition, deleteFn, getFn }: ItemProps) {
   }, [exhibition]);
 
   const deleteExhibition = async () => {
-    await deleteFn(id!)
+    await deleteFn(id!);
     setIsOpenDeleteModal(false);
-  }
+  };
 
   const getExhibition = async () => {
-    await getFn(id!);
-  }
+    getExhibitionFn(id!);
+  };
 
   return (
     <div className="border border-main-gray-300 px-8 py-6 bg-white mb-4 rounded-xl flex justify-between">
@@ -76,7 +76,10 @@ function Item({ exhibition, deleteFn, getFn }: ItemProps) {
             >
               Cancelar
             </button>
-            <button onClick={deleteExhibition} className="text-white flex-1 text-sm bg-[#D6006B] font-medium px-6 py-2 rounded-lg ">
+            <button
+              onClick={deleteExhibition}
+              className="text-white flex-1 text-sm bg-[#D6006B] font-medium px-6 py-2 rounded-lg "
+            >
               Eliminar
             </button>
           </div>
@@ -130,7 +133,10 @@ function Item({ exhibition, deleteFn, getFn }: ItemProps) {
             <img src={EliminarIcon} /> Eliminar
           </button>
 
-          <button onClick={getExhibition} className="flex items-center gap-1 text-sm text-main-gray-500 px-4 py-1 border border-main-gray-300 rounded-lg hover:bg-main-gray-300">
+          <button
+            onClick={getExhibition}
+            className="flex items-center gap-1 text-sm text-main-gray-500 px-4 py-1 border border-main-gray-300 rounded-lg hover:bg-main-gray-300"
+          >
             <img src={EditarIcon} /> Editar
           </button>
         </div>
